@@ -76,11 +76,11 @@ int setup_server_socket(const char *socket_path) {
  * sets the client sockets to non-blocking mode, and enqueues them
  * into the provided queue.
  *
+ * @param command_queue The queue to which new pcb will be added
  * @param server_fd The server socket file descriptor
- * @param queue The queue to which new client tasks will be added
  */
-void check_new_applications(int server_fd, queue_t *queue) {
-    // Accept a new client connection
+void check_new_commands(queue_t *command_queue, queue_t *blocked_queue, queue_t *ready_queue, int server_fd, uint32_t current_time_ms) {
+    // Accept new client connections
     int client_fd;
     do {
         client_fd = accept(server_fd, NULL, NULL);
@@ -109,47 +109,17 @@ void check_new_applications(int server_fd, queue_t *queue) {
             fcntl(client_fd, F_SETFD, fdflags | FD_CLOEXEC);
         }
         DBG("[Scheduler] New client connected: fd=%d\n", client_fd);
-        // New tasks do not have a time yet, will be set when we receive a RUN message
-        task_t *task = new_task(++PID, client_fd, 0);
-        enqueue_task(queue, task);
+        // New PCBs do not have a time yet, will be set when we receive a RUN message
+        pcb_t *pcb = new_pcb(++PID, client_fd, 0);
+        enqueue_pcb(command_queue, pcb);
     } while (client_fd > 0);
-}
 
-/**
- * @brief Check the wait queue for messages from clients.
- *
- * This function iterates through the wait queue, checking each client
- * socket for incoming messages. If a RUN message is received, the corresponding
- * task is moved to the ready queue and an ACK message is sent back to the client.
- * If a client disconnects or an error occurs, the client is removed from the wait queue.
- *
- * @param wait_queue The queue containing tasks waiting for CPU time
- * @param ready_queue The queue where tasks ready to run will be moved
- * @param current_time_ms The current time in milliseconds
- */
-void check_wait_queue(queue_t * wait_queue, queue_t * ready_queue, uint32_t current_time_ms) {
-    // Check all elements of the wait queue for new messages
-    queue_elem_t * elem = wait_queue->head;
+    // Check queue for new commands in the command queue
+    queue_elem_t * elem = command_queue->head;
     while (elem != NULL) {
-        task_t *current_task = elem->task;
-        if (current_task->status == TASK_BLOCKED) {
-            current_task->time_ms -= (current_task->time_ms>TICKS_MS)?TICKS_MS:current_task->time_ms;
-            if (current_task->time_ms == 0) {
-                current_task->status = TASK_STOPPED;
-                // Send DONE message to the application
-                msg_t msg = {
-                    .pid = current_task->pid,
-                    .request = PROCESS_REQUEST_DONE,
-                    .time_ms = current_time_ms
-                };
-                if (write(current_task->sockfd, &msg, sizeof(msg_t)) != sizeof(msg_t)) {
-                    perror("write");
-                }
-                DBG("Process %d finished BLOCK, sending DONE\n", current_task->pid);
-            }
-        }
+        pcb_t *current_pcb = elem->pcb;
         msg_t msg;
-        int n = read(current_task->sockfd, &msg, sizeof(msg_t));
+        int n = read(current_pcb->sockfd, &msg, sizeof(msg_t));
         if (n <= 0) {
             if (errno == EAGAIN || errno == EWOULDBLOCK) {
                 // No data available right now, move to next
@@ -160,50 +130,100 @@ void check_wait_queue(queue_t * wait_queue, queue_t * ready_queue, uint32_t curr
                 } else {
                     DBG("Connection closed by remote host\n");
                 }
-                // Remove from wait queue
+                // Remove from queue
                 queue_elem_t *tmp = elem;
                 elem = elem->next;
-                free(current_task);
+                free(current_pcb);
                 free(tmp);
             }
             continue;
         }
         // We have received a message
-        if (msg.request == PROCESS_REQUEST_BLOCK) {
-            current_task->time_ms = msg.time_ms;
-            current_task->status = TASK_BLOCKED;
-            DBG("Process %d requested BLOCK for %d ms\n", current_task->pid);
-        } else if (msg.request == PROCESS_REQUEST_RUN) {
-            current_task->time_ms = msg.time_ms;
-            current_task->status = TASK_RUNNING;
-            enqueue_task(ready_queue, current_task);
-            // Remove from wait queue
-            remove_queue_elem(wait_queue, elem);
-            queue_elem_t *tmp = elem;
-            elem = elem->next;
-            free(tmp);
-            DBG("Process %d requested RUN for %d ms\n", current_task->pid, current_task->time_ms);
+        if (msg.request == PROCESS_REQUEST_RUN) {
+            current_pcb->pid = msg.pid; // Set the pid from the message
+            current_pcb->time_ms = msg.time_ms;
+            current_pcb->status = TASK_RUNNING;
+            enqueue_pcb(ready_queue, current_pcb);
+            DBG("Process %d requested RUN for %d ms\n", current_pcb->pid, current_pcb->time_ms);
+        } else if (msg.request == PROCESS_REQUEST_BLOCK) {
+            current_pcb->pid = msg.pid; // Set the pid from the message
+            current_pcb->time_ms = msg.time_ms;
+            current_pcb->status = TASK_BLOCKED;
+            enqueue_pcb(blocked_queue, current_pcb);
+            DBG("Process %d requested BLOCK for %d ms\n", current_pcb->pid);
         } else {
             printf("Unexpected message received from client\n");
             continue;
         }
+        // Remove from command queue
+        remove_queue_elem(command_queue, elem);
+        queue_elem_t *tmp = elem;
+        elem = elem->next;
+        free(tmp);
+
         // Send ack message
         msg_t ack_msg = {
-            .pid = current_task->pid,
+            .pid = current_pcb->pid,
             .request = PROCESS_REQUEST_ACK,
             .time_ms = current_time_ms
         };
-        if (write(current_task->sockfd, &ack_msg, sizeof(msg_t)) != sizeof(msg_t)) {
+        if (write(current_pcb->sockfd, &ack_msg, sizeof(msg_t)) != sizeof(msg_t)) {
             perror("write");
         }
-        DBG("Send ACK message to process %d with time %d\n", current_task->pid, current_time_ms);
+        DBG("Send ACK message to process %d with time %d\n", current_pcb->pid, current_time_ms);
+    }
+
+}
+
+/**
+ * @brief Check the blocked queue for messages from clients.
+ *
+ * This function iterates through the blocked queue, checking each client
+ * socket for incoming messages. If a RUN message is received, the corresponding
+ * pcb is moved to the command queue and an ACK message is sent back to the client.
+ * If a client disconnects or an error occurs, the client is removed from the blocked queue.
+ *
+ * @param blocked_queue The queue containing PCBs in I/O wait stated (blocked) from CPU
+ * @param command_queue The queue where PCBs ready for new instructions will be moved
+ * @param current_time_ms The current time in milliseconds
+ */
+void check_blocked_queue(queue_t * blocked_queue, queue_t * command_queue, uint32_t current_time_ms) {
+    // Check all elements of the blocked queue for new messages
+    queue_elem_t * elem = blocked_queue->head;
+    while (elem != NULL) {
+        pcb_t *pcb = elem->pcb;
+        if (pcb->time_ms > TICKS_MS) {
+            pcb->time_ms -= TICKS_MS;
+        } else {
+            pcb->time_ms = 0;
+        }
+        if (pcb->time_ms == 0) {
+            // Send DONE message to the application
+            msg_t msg = {
+                .pid = pcb->pid,
+                .request = PROCESS_REQUEST_DONE,
+                .time_ms = current_time_ms
+            };
+            if (write(pcb->sockfd, &msg, sizeof(msg_t)) != sizeof(msg_t)) {
+                perror("write");
+            }
+            DBG("Process %d finished BLOCK, sending DONE\n", pcb->pid);
+            pcb->status = TASK_COMMAND;
+            enqueue_pcb(command_queue, pcb);
+
+            // Remove from blocked queue
+            remove_queue_elem(blocked_queue, elem);
+            queue_elem_t *tmp = elem;
+            elem = elem->next;
+            free(tmp);
+        }
     }
 }
 
 static const char *SCHEDULER_NAMES[] = {
     "FIFO",
     /*
-    "SJB",
+    "SJF",
     "RR",
     "MLFQ",
     */
@@ -213,7 +233,7 @@ static const char *SCHEDULER_NAMES[] = {
 typedef enum  {
     NULL_SCHEDULER = -1,
     SCHED_FIFO = 0,
-    SCHED_SJB,
+    SCHED_SJF,
     SCHED_RR,
     SCHED_MLFQ
 } scheduler_en;
@@ -243,13 +263,16 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    // We set up two queues: a wait queue for tasks that have connected but not yet sent a RUN message,
-    // and a ready queue for tasks that are ready to run.
+    // We set up 3 queues: 1 for the simulator and 2 for scheduling
+    // - COMMAND queue: for PCBs that are waiting for (new) instructions from the app
+    // - READY queue: for PCBs that are ready to run on the CPU
+    // - BLOCKED queue: for PCBs that are blocked waiting for I/O
+    queue_t command_queue = {.head = NULL, .tail = NULL};
     queue_t ready_queue = {.head = NULL, .tail = NULL};
-    queue_t wait_queue = {.head = NULL, .tail = NULL};
+    queue_t blocked_queue = {.head = NULL, .tail = NULL};
 
-    // We only have a single CPU that is a pointer to the actively running task on the CPU
-    task_t *CPU = NULL;
+    // We only have a single CPU that is a pointer to the actively running PCB on the CPU
+    pcb_t *CPU = NULL;
 
     int server_fd = setup_server_socket(SOCKET_PATH);
     if (server_fd < 0) {
@@ -259,22 +282,30 @@ int main(int argc, char *argv[]) {
     printf("Scheduler server listening on %s...\n", SOCKET_PATH);
     uint32_t current_time_ms = 0;
     while (1) {
-        // Check for new connections and set them to the wait queue
-        check_new_applications(server_fd, &wait_queue);
-
-        // Check for new messages from applications in the wait queue and move them to the ready queue
-        check_wait_queue(&wait_queue, &ready_queue, current_time_ms);
+        // Check for new connections and/or instructions
+        check_new_commands(&command_queue, &blocked_queue, &ready_queue, server_fd, current_time_ms);
 
         if (current_time_ms%1000 == 0) {
             printf("Current time: %d s\n", current_time_ms/1000);
         }
+        // Check the status of the PCBs in the blocked queue
+        check_blocked_queue(&blocked_queue, &command_queue, current_time_ms);
 
-        fifo_scheduler(current_time_ms, &ready_queue, &CPU);
+        // The scheduler handles the READY queue
+        switch (scheduler_type) {
+            case SCHED_FIFO:
+                fifo_scheduler(current_time_ms, &ready_queue, &CPU);
+                break;
+            default:
+                printf("Unknown scheduler type\n");
+                break;
+        }
 
         // Simulate a tick
         usleep(TICKS_MS * 1000);
         current_time_ms += TICKS_MS;
     }
 
+    // Unreachable, because of the infinite loop
     return 0;
 }

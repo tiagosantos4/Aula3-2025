@@ -3,12 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-task_t *new_task(pid_t pid, uint32_t sockfd, uint32_t time_ms) {
-    task_t * new_task = malloc(sizeof(task_t));
+pcb_t *new_pcb(pid_t pid, uint32_t sockfd, uint32_t time_ms) {
+    pcb_t * new_task = malloc(sizeof(pcb_t));
     if (!new_task) return NULL;
 
     new_task->pid = pid;
-    new_task->status = TASK_ACCEPT;
+    new_task->status = TASK_COMMAND;
     new_task->slice_start_ms = 0;
     new_task->sockfd = sockfd;
     new_task->time_ms = time_ms;
@@ -16,11 +16,11 @@ task_t *new_task(pid_t pid, uint32_t sockfd, uint32_t time_ms) {
     return new_task;
 }
 
-int enqueue_task(queue_t* q, task_t* task) {
+int enqueue_pcb(queue_t* q, pcb_t* task) {
     queue_elem_t* elem = malloc(sizeof(queue_elem_t));
     if (!elem) return 0;
 
-    elem->task = task;
+    elem->pcb = task;
     elem->next = NULL;
 
     if (q->tail) {
@@ -32,11 +32,11 @@ int enqueue_task(queue_t* q, task_t* task) {
     return 1;
 }
 
-task_t* dequeue_task(queue_t* q) {
+pcb_t* dequeue_pcb(queue_t* q) {
     if (!q || !q->head) return NULL;
 
     queue_elem_t* node = q->head;
-    task_t* task = node->task;
+    pcb_t* task = node->pcb;
 
     q->head = node->next;
     if (!q->head)
