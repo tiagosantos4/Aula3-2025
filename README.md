@@ -1,6 +1,7 @@
 # Aula 3 / Sistemas Operativos – 2025  
 **Repositório:** Aula3-2025  
-**Instituição:** ULHT  
+**Instituição:** ULHT  - Universidade Lusófona
+
 
 ---
 
@@ -85,8 +86,8 @@ Aqui ficam os passos que vamos seguir em aula (conforme o guião):
 
 ## Autor / Contacto
 
-- Docente: *[Nome do professor]*  
-- Email: *[email da disciplina]*  
+- Docentes: Paulo Guedes, Martijn Kuipers, Daniel Silveira
+- Email: p4693@ulusofona.pt, martijn.kuipers@ulusofona.pt, p6902@ulusofona.pt
 - Versão: 1.0 (início do semestre 2025)
 
 ---
