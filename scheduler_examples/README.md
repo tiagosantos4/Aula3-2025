@@ -94,5 +94,55 @@ Simulator                           Applications
 ```
 
 
-    
-    
+# Getting started
+
+To compile the simulator and the applications you can use CLion, 
+which is set up to compile these on our Linux based virtual machine.
+
+Running the simulator requires you to run the ossim (scheduler) app and the app (applications app).
+Since we want to run multiple applications at the same time, it is easiest to set up a shell script,
+such as run_apps.sh.
+
+Open a remote terminal to the Linux VM, navigate to the scheduler_examples directory and enter the
+cmake-build-debug folder, where CLion stores the binaries of the application. 
+
+Copy or move the run_apps.sh file to this directory, make it executable and edit it to match your needs.
+
+```bash
+chmod +x run_apps.sh
+cp run_apps.sh cmake-build-debug/.
+```
+
+Now open a second remote terminal en enter the cmake-build-debug directory. In this
+terminal you will run the simulator (ossim), like so:
+
+```bash
+./ossim FIFO
+```
+This will start the simulator with the FIFO scheduling algorithm.
+
+After starting the simulator, switch to the first terminal and run the run_apps.sh script:
+
+```bash
+./run_apps.sh
+```
+This will start the applications, which will connect to the simulator and start sending
+messages.
+
+You can edit the run_apps.sh script to change the scheduling algorithm used by the simulator
+and the applications to be run. You can also add more applications or change the parameters
+of the existing ones.
+
+## Note for MLFQ
+To test the MLFQ scheduling algorithm, you need to use the app-io application, which requires
+a filename as command line argument. This file should contain on each line the burst time and
+the block time (in ms) of each cycle. You can create multiple files with different parameters
+to test the MLFQ algorithm.
+
+We have provided A-5.csv, B-5.csv and C-5.csv in this directory, which you can use to test the MLFQ algorithm.
+You can edit the run_apps.sh script to use these files as arguments for the app-io application.
+Make sure to provide the correct path to these files, for instance:
+
+```
+./app-io ../A-5.csv &
+```
