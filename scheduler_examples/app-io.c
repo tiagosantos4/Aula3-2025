@@ -148,7 +148,7 @@ int main(int argc, char *argv[]) {
     double user = (double)cpu_duration_ms/1000.0;
     double sys = (double)block_duration_ms/1000.0;
 
-    printf("Application %s (PID %d) finished at time %d ms, Elapsed: %.03f seconds, CPU: %.03f seconds, SYS: %.03f seconds\n",
+    printf("Application %s (PID %d) finished at time %d ms, Elapsed: %.03f seconds, CPU: %.03f seconds, BLOCKED: %.03f seconds\n",
            app_name, pid, sim_clock_ms, real, user, sys);
 
     close(sockfd);
