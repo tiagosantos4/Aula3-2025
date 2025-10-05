@@ -39,24 +39,24 @@ B: Elapsed=40.000s, CPU=15.000s, Response=1.100s
 C: Elapsed=45.000s, CPU=20.000s, Response=1.100s
 
 RR - Cenário 1 - Execução 3:
-A: Elapsed=29.000s, CPU=10.000s, Response=0.760s
-B: Elapsed=39.990s, CPU=15.000s, Response=0.770s
-C: Elapsed=45.000s, CPU=20.000s, Response=0.760s
+A: Elapsed=29.000s, CPU=10.000s, Response=0.560s
+B: Elapsed=39.970s, CPU=15.000s, Response=0.590s
+C: Elapsed=44.990s, CPU=20.000s, Response=0.570s
 
 MLFQ - Cenário 1 - Execução 1:
-A: Elapsed=29.000s, CPU=10.000s, Response=0.970s
-B: Elapsed=38.500s, CPU=15.000s, Response=0.970s
-C: Elapsed=45.000s, CPU=20.000s, Response=0.970s
+A: Elapsed=29.000s, CPU=10.000s, Response=0.600s
+B: Elapsed=38.500s, CPU=15.000s, Response=0.630s
+C: Elapsed=45.000s, CPU=20.000s, Response=0.640s
 
 MLFQ - Cenário 1 - Execeção 2:
-A: Elapsed=29.000s, CPU=10.000s, Response=0.960s
-B: Elapsed=40.490s, CPU=15.000s, Response=0.970s
-C: Elapsed=44.990s, CPU=20.000s, Response=0.970s
+A: Elapsed=29.000s, CPU=10.000s, Response=0.570s
+B: Elapsed=40.490s, CPU=15.000s, Response=0.560s
+C: Elapsed=44.990s, CPU=20.000s, Response=0.580s
 
 MLFQ - Cenário 1 - Execução 3:
-A: Elapsed=29.000s, CPU=10.000s, Response=0.980s
-B: Elapsed=40.490s, CPU=15.000s, Response=0.990s
-C: Elapsed=45.000s, CPU=20.000s, Response=0.980s
+A: Elapsed=29.000s, CPU=10.000s, Response=0.600s
+B: Elapsed=40.490s, CPU=15.000s, Response=0.640s
+C: Elapsed=45.000s, CPU=20.000s, Response=0.620s
 
 FIFO - Cenário 2 - Execução 1:
 A: Elapsed=5.000s, CPU=5.000s, Response=0.950s
