@@ -1,0 +1,189 @@
+FIFO - Cenário 1 - Execução 1:
+B: Elapsed=15.000s, CPU=15.000s, Response=0.920s
+C: Elapsed=34.980s, CPU=20.000s, Response=15.920s
+A: Elapsed=44.970s, CPU=10.000s, Response=35.920s
+
+FIFO - Cenário 1 - Execução 2:
+C: Elapsed=20.000s, CPU=20.000s, Response=0.680s
+B: Elapsed=34.990s, CPU=15.000s, Response=20.680s
+A: Elapsed=44.990s, CPU=10.000s, Response=35.680s
+
+FIFO - Cenário 1 - Execução 3:
+B: Elapsed=15.000s, CPU=15.000s, Response=0.930s
+C: Elapsed=35.000s, CPU=20.000s, Response=15.930s
+A: Elapsed=44.990s, CPU=10.000s, Response=35.930s
+
+SJF - Cenário 1 - Execução 1:
+B: Elapsed=15.000s, CPU=15.000s, Response=0.730s
+A: Elapsed=24.990s, CPU=10.000s, Response=15.730s
+C: Elapsed=44.990s, CPU=20.000s, Response=25.730s
+
+SJF - Cenário 1 - Execução 2:
+A: Elapsed=10.000s, CPU=10.000s, Response=0.590s
+B: Elapsed=25.000s, CPU=15.000s, Response=10.590s
+C: Elapsed=45.000s, CPU=20.000s, Response=25.590s
+
+SJF - Cenário 1 - Execução 3:
+B: Elapsed=15.000s, CPU=15.000s, Response=0.690s
+A: Elapsed=24.980s, CPU=10.000s, Response=15.690s
+C: Elapsed=44.980s, CPU=20.000s, Response=25.690s
+
+RR - Cenário 1 - Execução 1:
+A: Elapsed=29.000s, CPU=10.000s, Response=1.080s
+B: Elapsed=39.990s, CPU=15.000s, Response=1.090s
+C: Elapsed=45.000s, CPU=20.000s, Response=1.080s
+
+RR - Cenário 1 - Execução 2:
+A: Elapsed=29.500s, CPU=10.000s, Response=1.100s
+B: Elapsed=40.000s, CPU=15.000s, Response=1.100s
+C: Elapsed=45.000s, CPU=20.000s, Response=1.100s
+
+RR - Cenário 1 - Execução 3:
+A: Elapsed=29.000s, CPU=10.000s, Response=0.760s
+B: Elapsed=39.990s, CPU=15.000s, Response=0.770s
+C: Elapsed=45.000s, CPU=20.000s, Response=0.760s
+
+MLFQ - Cenário 1 - Execução 1:
+A: Elapsed=29.000s, CPU=10.000s, Response=0.970s
+B: Elapsed=38.500s, CPU=15.000s, Response=0.970s
+C: Elapsed=45.000s, CPU=20.000s, Response=0.970s
+
+MLFQ - Cenário 1 - Execeção 2:
+A: Elapsed=29.000s, CPU=10.000s, Response=0.960s
+B: Elapsed=40.490s, CPU=15.000s, Response=0.970s
+C: Elapsed=44.990s, CPU=20.000s, Response=0.970s
+
+MLFQ - Cenário 1 - Execução 3:
+A: Elapsed=29.000s, CPU=10.000s, Response=0.980s
+B: Elapsed=40.490s, CPU=15.000s, Response=0.990s
+C: Elapsed=45.000s, CPU=20.000s, Response=0.980s
+
+FIFO - Cenário 2 - Execução 1:
+A: Elapsed=5.000s, CPU=5.000s, Response=0.950s
+D: Elapsed=6.990s, CPU=2.000s, Response=0.960s
+C: Elapsed=10.990s, CPU=4.000s, Response=0.960s
+E: Elapsed=13.980s, CPU=3.000s, Response=0.970s
+F: Elapsed=28.980s, CPU=15.000s, Response=0.970s
+B: Elapsed=38.970s, CPU=10.000s, Response=0.980s
+
+FIFO - Cenário 2 - Execução 2:
+A: Elapsed=5.000s, CPU=5.000s, Response=0.950s
+B: Elapsed=14.990s, CPU=10.000s, Response=0.960s
+C: Elapsed=18.990s, CPU=4.000s, Response=0.960s
+F: Elapsed=33.980s, CPU=15.000s, Response=0.970s
+D: Elapsed=35.980s, CPU=2.000s, Response=0.970s
+E: Elapsed=38.980s, CPU=3.000s, Response=0.970s
+
+FIFO - Cenário 2 - Execução 3:
+A: Elapsed=5.000s, CPU=5.000s, Response=0.480s
+C: Elapsed=8.980s, CPU=4.000s, Response=0.500s
+D: Elapsed=10.970s, CPU=2.000s, Response=0.510s
+E: Elapsed=13.960s, CPU=3.000s, Response=0.520s
+F: Elapsed=28.940s, CPU=15.000s, Response=0.540s
+B: Elapsed=38.930s, CPU=10.000s, Response=0.550s
+
+SJF - Cenário 2 - Execução 1:
+A: Elapsed=5.000s, CPU=5.000s, Response=0.460s
+D: Elapsed=6.960s, CPU=2.000s, Response=0.500s
+E: Elapsed=9.930s, CPU=3.000s, Response=0.530s
+C: Elapsed=13.960s, CPU=4.000s, Response=0.500s
+B: Elapsed=23.940s, CPU=10.000s, Response=0.520s
+F: Elapsed=38.930s, CPU=15.000s, Response=0.530s
+
+SJF - Cenário 2 - Execução 2:
+A: Elapsed=5.000s, CPU=5.000s, Response=0.910s
+D: Elapsed=6.980s, CPU=2.000s, Response=0.930s
+E: Elapsed=9.960s, CPU=3.000s, Response=0.950s
+C: Elapsed=13.980s, CPU=4.000s, Response=0.930s
+B: Elapsed=23.960s, CPU=10.000s, Response=0.950s
+F: Elapsed=38.970s, CPU=15.000s, Response=0.940s
+
+SJF - Cenário 2 - Execução 3:
+A: Elapsed=5.000s, CPU=5.000s, Response=0.900s
+D: Elapsed=6.940s, CPU=2.000s, Response=0.960s
+E: Elapsed=9.910s, CPU=3.000s, Response=0.990s
+C: Elapsed=13.930s, CPU=4.000s, Response=0.970s
+B: Elapsed=23.940s, CPU=10.000s, Response=0.960s
+F: Elapsed=38.910s, CPU=15.000s, Response=0.990s
+
+RR - Cenário 2 - Execução 1:
+D: Elapsed=10.000s, CPU=2.000s, Response=0.680s
+E: Elapsed=16.490s, CPU=3.000s, Response=0.690s
+C: Elapsed=20.990s, CPU=4.000s, Response=0.690s
+A: Elapsed=23.000s, CPU=5.000s, Response=0.680s
+B: Elapsed=33.500s, CPU=10.000s, Response=0.680s
+F: Elapsed=39.000s, CPU=15.000s, Response=0.680s
+
+RR - Cenário 2 - Execução 2:
+D: Elapsed=9.970s, CPU=2.000s, Response=0.970s
+E: Elapsed=16.470s, CPU=3.000s, Response=0.970s
+C: Elapsed=19.970s, CPU=4.000s, Response=0.970s
+A: Elapsed=23.000s, CPU=5.000s, Response=0.940s
+B: Elapsed=33.470s, CPU=10.000s, Response=0.970s
+F: Elapsed=38.970s, CPU=15.000s, Response=0.970s
+
+RR - Cenário 2 - Execução 3:
+D: Elapsed=9.990s, CPU=2.000s, Response=0.640s
+E: Elapsed=16.480s, CPU=3.000s, Response=0.650s
+C: Elapsed=20.490s, CPU=4.000s, Response=0.640s
+A: Elapsed=23.000s, CPU=5.000s, Response=0.630s
+B: Elapsed=33.490s, CPU=10.000s, Response=0.640s
+F: Elapsed=38.980s, CPU=15.000s, Response=0.650s
+
+MLFQ - Cenário 2 - Execução 1:
+D: Elapsed=13.480s, CPU=2.000s, Response=0.930s
+E: Elapsed=16.970s, CPU=3.000s, Response=0.940s
+A: Elapsed=20.500s, CPU=5.000s, Response=0.910s
+C: Elapsed=20.980s, CPU=4.000s, Response=0.930s
+B: Elapsed=33.470s, CPU=10.000s, Response=0.940s
+F: Elapsed=38.950s, CPU=15.000s, Response=0.960s
+
+MLFQ - Cenário 2 - Execução 2:
+D: Elapsed=15.460s, CPU=2.000s, Response=0.930s
+E: Elapsed=16.950s, CPU=3.000s, Response=0.940s
+A: Elapsed=20.500s, CPU=5.000s, Response=0.890s
+C: Elapsed=22.980s, CPU=4.000s, Response=0.910s
+B: Elapsed=33.490s, CPU=10.000s, Response=0.900s
+F: Elapsed=38.930s, CPU=15.000s, Response=0.960s
+
+MLFQ - Cenário 2 - Execução 3:
+E: Elapsed=12.490s, CPU=3.000s, Response=0.680s
+D: Elapsed=12.980s, CPU=2.000s, Response=0.690s
+A: Elapsed=20.500s, CPU=5.000s, Response=0.670s
+C: Elapsed=22.970s, CPU=4.000s, Response=0.700s
+B: Elapsed=35.460s, CPU=10.000s, Response=0.710s
+F: Elapsed=38.980s, CPU=15.000s, Response=0.690s
+
+MLFQ - Cenário 3 - Execução 1:
+A-5: Elapsed=25.810s, CPU=2.000s, BLOCKED=20.000s, Response=0.920s
+B-5: Elapsed=25.990s, CPU=2.000s, BLOCKED=20.000s, Response=0.940s
+C-5: Elapsed=35.500s, CPU=30.000s, BLOCKED=1.500s, Response=0.940s
+
+MLFQ - Cenário 3 - Execução 2:
+B-5: Elapsed=25.810s, CPU=2.000s, BLOCKED=20.000s, Response=0.980s
+A-5: Elapsed=26.000s, CPU=2.000s, BLOCKED=20.000s, Response=0.990s
+C-5: Elapsed=35.510s, CPU=30.000s, BLOCKED=1.500s, Response=0.990s
+
+MLFQ - Cenário 3 - Execução 3:
+A-5: Elapsed=25.810s, CPU=2.000s, BLOCKED=20.000s, Response=0.910s
+B-5: Elapsed=26.010s, CPU=2.000s, BLOCKED=20.000s, Response=0.910s
+C-5: Elapsed=35.520s, CPU=30.000s, BLOCKED=1.500s, Response=0.910s
+
+MLFQ - Cenário 4 - Execução 1:
+C-6: Elapsed=127.500s, CPU=60.000s, BLOCKED=3.000s, Response=0.970s
+B-6: Elapsed=139.370s, CPU=34.000s, BLOCKED=41.500s, Response=0.950s
+A-6: Elapsed=139.550s, CPU=34.000s, BLOCKED=41.500s, Response=0.970s
+
+MLFQ - Cenário 4 - Execução 2:
+C-6: Elapsed=127.500s, CPU=60.000s, BLOCKED=3.000s, Response=0.950s
+A-6: Elapsed=139.370s, CPU=34.000s, BLOCKED=41.500s, Response=0.930s
+B-6: Elapsed=139.560s, CPU=34.000s, BLOCKED=41.500s, Response=0.940s
+
+MLFQ - Cenário 4 - Execução 3:
+C-6: Elapsed=127.510s, CPU=60.000s, BLOCKED=3.000s, Response=0.930s
+B-6: Elapsed=139.370s, CPU=34.000s, BLOCKED=41.500s, Response=0.920s
+A-6: Elapsed=139.570s, CPU=34.000s, BLOCKED=41.500s, Response=0.920s
+
+
+
+
